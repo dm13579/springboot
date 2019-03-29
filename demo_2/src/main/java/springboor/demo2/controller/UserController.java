@@ -51,7 +51,7 @@ public class UserController {
     @RequestMapping(value="/create", method=RequestMethod.GET)
     public String toAdd(ModelMap map) {
        map.addAttribute("user",new User());
-       map.addAttribute("action","creayte");
+       map.addAttribute("action","create");
        return "userForm";
     }
 

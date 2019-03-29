@@ -26,12 +26,12 @@
         </tr>
         </thead>
         <tbody>
-        <tr th:each="user : ${userList}">
-            <th scope="row" th:text="${user.id}"></th>
+        <tr th:each = "user : ${userList}">
+            <td th:text="${user.id}"></td>
             <td><a th:href="@{/users/update/{userId}(userId=${user.id})}" th:text="${user.name}"></a></td>
-            <td th:text="${user.age}"></td>
-            <td th:text="${user.birthday}"></td>
-            <td><a class="btn btn-danger" th:href="@{/users/delete/{userId}(userId=${user.id})}">删除</a></td>
+            <td th:text = "${user.age}"></td>
+            <td th:text = "${user.birthday}"></td>
+            <td><a class="btn btn-danger" th:href = "@{/users/delete/{userId}(userId = ${user.id})}"></a></td>
         </tr>
         </tbody>
     </table>
