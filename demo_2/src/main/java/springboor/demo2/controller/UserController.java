@@ -2,14 +2,12 @@ package springboor.demo2.controller;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
-import org.springframework.ui.Model;
 import org.springframework.ui.ModelMap;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
-import springboor.demo2.Repository.UserRepository;
 import springboor.demo2.entity.User;
 import springboor.demo2.service.UserSevice;
 
@@ -62,7 +60,7 @@ public class UserController {
      * @param bindingResult
      * @return
      */
-    @RequestMapping(value="/craete", method = RequestMethod.POST)
+    @RequestMapping(value="/create", method = RequestMethod.POST)
     public String add(ModelMap map, @ModelAttribute @Valid User user, BindingResult bindingResult){
         if(bindingResult.hasErrors()){
             map.addAttribute("action","create");
