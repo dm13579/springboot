@@ -1,16 +1,13 @@
 package springboot.demo_4.service.impl;
 
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.cache.annotation.CacheConfig;
-import org.springframework.cache.annotation.CacheEvict;
-import org.springframework.cache.annotation.CachePut;
-import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
 import springboot.demo_4.domain.Book;
-import springboot.demo_4.domain.BookRepository;
 import springboot.demo_4.service.BookService;
-import java.util.List;
+import springboot.demo_4.util.RedisUtil;
 
+import javax.annotation.Resource;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * @author Administrator
@@ -20,41 +17,50 @@ import java.util.List;
  * @date 2019/3/29
  */
 @Service
-@CacheConfig(cacheNames = "books")
 public class BookServiceImpl implements BookService{
 
-    @Autowired
-    BookRepository bookRepository;
+    @Resource(name = "redisUtil")
+    private RedisUtil redisUtil;
 
     @Override
     public List<Book> findAll() {
-        return bookRepository.findAll();
+        List<Book> bookList = new ArrayList<Book>();
+        int i=1;
+        while (redisUtil.hasKey("book_"+i)){
+            Book book = (Book) redisUtil.get("book_"+i);
+            bookList.add(book);
+            i++;
+        }
+        return bookList;
     }
 
-    @Cacheable(key = "#p0")
     @Override
     public Book findById(Long id) {
-        return bookRepository.findById(id).get();
+        Book book = (Book) redisUtil.get("book_"+id);
+        return book;
     }
 
     @Override
     public Book add(Book book) {
-        bookRepository.save(book);
+        int i=1;
+        while (redisUtil.hasKey("book_"+i)){
+            i++;
+        }
+        book.setId(Long.parseLong(i+""));
+        redisUtil.set("book_"+i,book);
         return book;
     }
 
-    @CachePut(key = "#p0.id")
     @Override
     public Book update(Book book) {
-        bookRepository.save(book);
+        redisUtil.set("book_"+book.getId(),book);
         return book;
     }
 
-    @CacheEvict(key = "#p0")
     @Override
     public Book delete(Long id) {
-        Book book = bookRepository.findById(id).get();
-        bookRepository.delete(book);
+        Book book = (Book) redisUtil.get("book_"+id);
+        redisUtil.del("book_"+id);
         return book;
     }
 }
